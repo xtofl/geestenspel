@@ -15,11 +15,12 @@ class Speler:
 
 class Spel(flask.Flask):
 
-    def __init__(self, spelers, kaarten, naam="Geesten"):
+    def __init__(self, spelers, kaarten, spulletjes, naam="Geesten"):
         super(Spel, self).__init__(naam)
         self.spelers = spelers
         self.kaarten = iter(kaarten)
         self.kaart = next(self.kaarten)
+        self.spulletjes = spulletjes
 
     def probeer(self, speler, wat):
         if self.kaart.antwoord == wat:
@@ -43,10 +44,12 @@ def test_spel_kan_starten():
     assert spel.kaart == zetel
 
 
-spel = Spel(map(Speler, ["xtofl", "jona", "isaak"]), [
-    Kaart("Blauw Geest Groen Boek", "Grijs Muis"),
-    Kaart("Rood Boek Groen Geest", "Grijs Muis")
-])
+spel = Spel(map(Speler, ["xtofl", "jona", "isaak"]),
+            kaarten=[
+                Kaart("Blauw Geest Groen Boek", "Grijs Muis"),
+                Kaart("Rood Boek Groen Geest", "Grijs Muis")
+            ],
+            spulletjes=["Wit Spook", "Blauw Boek", "Rode Zetel", "Grijze Muis", "Groene Fles"])
 
 
 @spel.route("/ik_weet/<wie>/<wat>", methods=["POST"])
@@ -57,7 +60,7 @@ def ik_weet(wie, wat):
 
 @spel.route("/kaart")
 def kaart():
-    return spel.kaart.beeld
+    return flask.render_template('speeltafel.html', kaart=spel.kaart.beeld, spulletjes=spel.spulletjes)
 
 
 def main():
