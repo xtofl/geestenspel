@@ -12,6 +12,15 @@ class Speler:
         self.naam = naam
         self.gewonnen = []
 
+    def juist_geraden(self, kaart):
+        self.gewonnen.append(kaart)
+
+    def fout_geraden_geef_kaart_terug(self):
+        try:
+            return self.gewonnen.pop(-1)
+        except IndexError:
+            return None
+
 
 class Spel(flask.Flask):
 
@@ -33,15 +42,33 @@ class Spel(flask.Flask):
 def test_spel_kan_starten():
     spook = Kaart("Groen Boek Blauw Zetel", "Wit Spook")
     zetel = Kaart("Blauw Muis Groen Spook", "Rood Zetel")
+    spulletjes = ["Wit Spook"]
 
     ik, jij, hij = map(Speler, ["ik", "jij", "hij"])
-    spel = Spel([ik, jij, hij], [spook, zetel])
+    spel = Spel([ik, jij, hij], [spook, zetel], spulletjes)
 
     spel.probeer(ik, "Geel Spook")
     assert ik.gewonnen == []
     spel.probeer(jij, "Wit Spook")
     assert jij.gewonnen == [spook]
     assert spel.kaart == zetel
+
+
+def test_speler():
+    ik = Speler("Ik")
+    kaart1 = Kaart("X", "x")
+    kaart2 = Kaart("Y", "y")
+
+    assert ik.fout_geraden_geef_kaart_terug() == None
+
+    ik.juist_geraden(kaart1)
+    assert ik.gewonnen == [kaart1]
+
+    ik.juist_geraden(kaart2)
+    assert ik.gewonnen == [kaart1, kaart2]
+
+    assert kaart2 == ik.fout_geraden_geef_kaart_terug()
+    assert ik.gewonnen == [kaart1]
 
 
 spel = Spel(map(Speler, ["xtofl", "jona", "isaak"]),
