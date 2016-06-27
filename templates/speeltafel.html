@@ -1,9 +1,21 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>Geesten</title>
+    <script src="/static/speeltafel.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="kaart">{{kaart}}</div>
-<div id="spulletjes">{{spulletjes}}</div>
+<div>
+    <ul id="spulletjes">
+    {% for spul in spulletjes %}
+        <li id="{{spul}}" onclick="speeltafel.probeer('ik', '{{spul}}')">{{spul}}</li>
+    {% endfor %}
+    </ul>
+</div>
+<div id="speler">
+    Speler
+    <div id="resultaat"></div>
+</div>
 </body>
 </html>

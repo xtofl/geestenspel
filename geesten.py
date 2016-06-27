@@ -73,16 +73,18 @@ def test_speler():
 
 spel = Spel(map(Speler, ["xtofl", "jona", "isaak"]),
             kaarten=[
-                Kaart("Blauw Geest Groen Boek", "Grijs Muis"),
-                Kaart("Rood Boek Groen Geest", "Grijs Muis")
+                Kaart("Blauw Geest Groen Boek", "Grijze Muis"),
+                Kaart("Rood Boek Groen Geest", "Grijze Muis")
             ],
             spulletjes=["Wit Spook", "Blauw Boek", "Rode Zetel", "Grijze Muis", "Groene Fles"])
 
 
-@spel.route("/ik_weet/<wie>/<wat>", methods=["POST"])
-def ik_weet(wie, wat):
+@spel.route("/grijp/<wie>/<wat>", methods=["POST"])
+def grijp(wie, wat):
     if spel.probeer(wie, wat):
-        pass
+        return "Juist!"
+    else:
+        return "fout..."
 
 
 @spel.route("/kaart")
