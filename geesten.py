@@ -38,6 +38,8 @@ class Spel(flask.Flask):
         else:
             return False
 
+    def speler(self, naam):
+        return next(s for s in self.spelers if s.naam == naam)
 
 def test_spel_kan_starten():
     spook = Kaart("Groen Boek Blauw Zetel", "Wit Spook")
@@ -47,6 +49,7 @@ def test_spel_kan_starten():
     ik, jij, hij = map(Speler, ["ik", "jij", "hij"])
     spel = Spel([ik, jij, hij], [spook, zetel], spulletjes)
 
+    assert ik == spel.speler("ik")
     spel.probeer(ik, "Geel Spook")
     assert ik.gewonnen == []
     spel.probeer(jij, "Wit Spook")
@@ -79,9 +82,9 @@ spel = Spel(map(Speler, ["xtofl", "jona", "isaak"]),
             spulletjes=["Wit Spook", "Blauw Boek", "Rode Zetel", "Grijze Muis", "Groene Fles"])
 
 
-@spel.route("/grijp/<wie>/<wat>", methods=["POST"])
-def grijp(wie, wat):
-    if spel.probeer(wie, wat):
+@spel.route("/<naam>/grijp/<wat>", methods=["POST"])
+def grijp(naam, wat):
+    if spel.probeer(spel.speler(naam), wat):
         return "Juist!"
     else:
         return "fout..."

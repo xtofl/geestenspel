@@ -2,7 +2,7 @@ var speeltafel = function(window, document) {
         probeer = function(wie, wat){
             var rq = new window.XMLHttpRequest();
             rq.init = function(){
-                    rq.open('POST', '/grijp/'+wie+'/'+wat);
+                    rq.open('POST', '/' + wie + '/grijp/'+wat);
                     rq.send(null);
                 };
              rq.onreadystatechange = function(){
